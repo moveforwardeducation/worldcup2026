@@ -1,0 +1,6 @@
+[
+  { "id": "grp_a", "name": "Group A", "teamIds": ["arg", "fra", "mex", "jpn"], "winnerId": "arg", "concludeInMinutes": 10 },
+  { "id": "grp_b", "name": "Group B", "teamIds": ["bra", "esp", "can", "uru"], "winnerId": "bra", "concludeInMinutes": 15 },
+  { "id": "grp_c", "name": "Group C", "teamIds": ["eng", "ger", "usa", "col"], "winnerId": "eng", "concludeInMinutes": 1200 },
+  { "id": "grp_d", "name": "Group D", "teamIds": ["por", "ned", "ita", "bel"], "winnerId": "por", "concludeInMinutes": 1600 }
+]

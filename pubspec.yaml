@@ -1,0 +1,65 @@
+name: road_to_wc2026
+description: "Road to World Cup 2026 - gamified football learning app"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Routing
+  go_router: ^14.6.2
+
+  # Local storage
+  hive_ce: ^2.10.1
+  hive_ce_flutter: ^2.2.0
+  path_provider: ^2.1.5
+
+  # Utilities
+  google_fonts: ^6.2.1
+  intl: ^0.20.1
+  collection: ^1.18.0
+  firebase_core: ^4.10.0
+  firebase_auth: ^6.5.2
+  cloud_firestore: ^6.5.0
+  url_launcher: ^6.3.2
+  share_plus: ^13.1.0
+  google_mobile_ads: ^9.0.0
+  firebase_crashlytics: ^5.2.3
+  firebase_analytics: ^12.4.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/seed/
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 23
+  adaptive_icon_background: "#0A1230"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
+
+flutter_native_splash:
+  color: "#0A1230"
+  image: "assets/icon/app_icon.png"
+  android: true
+  ios: false
+  android_12:
+    color: "#0A1230"
+    image: "assets/icon/app_icon.png"

@@ -1,0 +1,20 @@
+[
+  { "id": "f_arg_fra", "teamA": "arg", "teamB": "fra", "dateLabel": "Group A · MD1", "scoreA": 2, "scoreB": 1, "kickoffInMinutes": 2 },
+  { "id": "f_bra_esp", "teamA": "bra", "teamB": "esp", "dateLabel": "Group B · MD1", "scoreA": 3, "scoreB": 1, "kickoffInMinutes": 6 },
+  { "id": "f_ita_can", "teamA": "ita", "teamB": "can", "dateLabel": "Group H · MD1", "scoreA": 2, "scoreB": 1, "kickoffInMinutes": 12 },
+  { "id": "f_ger_jpn", "teamA": "ger", "teamB": "jpn", "dateLabel": "Group C · MD1", "scoreA": 1, "scoreB": 1, "kickoffInMinutes": 180 },
+  { "id": "f_eng_usa", "teamA": "eng", "teamB": "usa", "dateLabel": "Group E · MD1", "scoreA": 2, "scoreB": 0, "kickoffInMinutes": 360 },
+  { "id": "f_por_mex", "teamA": "por", "teamB": "mex", "dateLabel": "Group D · MD1", "scoreA": 3, "scoreB": 2, "kickoffInMinutes": 600 },
+  { "id": "f_ned_uru", "teamA": "ned", "teamB": "uru", "dateLabel": "Group F · MD1", "scoreA": 1, "scoreB": 0, "kickoffInMinutes": 1500 },
+  { "id": "f_bel_col", "teamA": "bel", "teamB": "col", "dateLabel": "Group G · MD1", "scoreA": 0, "scoreB": 2, "kickoffInMinutes": 1620 },
+  { "id": "f_arg_mex", "teamA": "arg", "teamB": "mex", "dateLabel": "Group A · MD2", "scoreA": 2, "scoreB": 0, "kickoffInMinutes": 1800 },
+  { "id": "f_bra_can", "teamA": "bra", "teamB": "can", "dateLabel": "Group B · MD2", "scoreA": 4, "scoreB": 0, "kickoffInMinutes": 2100 },
+  { "id": "f_fra_jpn", "teamA": "fra", "teamB": "jpn", "dateLabel": "Group A · MD2", "scoreA": 2, "scoreB": 1, "kickoffInMinutes": 2900 },
+  { "id": "f_esp_ita", "teamA": "esp", "teamB": "ita", "dateLabel": "Group B · MD2", "scoreA": 1, "scoreB": 1, "kickoffInMinutes": 3100 },
+  { "id": "f_ger_usa", "teamA": "ger", "teamB": "usa", "dateLabel": "Group C · MD2", "scoreA": 2, "scoreB": 2, "kickoffInMinutes": 3400 },
+  { "id": "f_por_col", "teamA": "por", "teamB": "col", "dateLabel": "Group D · MD2", "scoreA": 1, "scoreB": 0, "kickoffInMinutes": 4400 },
+  { "id": "f_eng_ned", "teamA": "eng", "teamB": "ned", "dateLabel": "Group E · MD2", "scoreA": 0, "scoreB": 1, "kickoffInMinutes": 4600 },
+  { "id": "f_uru_bel", "teamA": "uru", "teamB": "bel", "dateLabel": "Group F · MD2", "scoreA": 2, "scoreB": 2, "kickoffInMinutes": 5900 },
+  { "id": "f_arg_bra", "teamA": "arg", "teamB": "bra", "dateLabel": "Round of 16", "scoreA": 1, "scoreB": 2, "kickoffInMinutes": 7300 },
+  { "id": "f_fra_ger", "teamA": "fra", "teamB": "ger", "dateLabel": "Round of 16", "scoreA": 3, "scoreB": 1, "kickoffInMinutes": 8800 }
+]

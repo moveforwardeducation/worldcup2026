@@ -1,0 +1,13 @@
+{
+  "name": "fc2026-sync-fixtures",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Syncs Football Champions 2026 fixtures + results from a football API into Firestore.",
+  "scripts": {
+    "sync": "node sync.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}

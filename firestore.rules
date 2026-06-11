@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Read-only public content (seeded server-side).
+    match /fixtures/{doc} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+    match /liveChallenges/{doc} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // Aggregate team leaderboard. Any signed-in user may contribute XP.
+    match /teamLeaderboard/{teamId} {
+      allow read: if signedIn();
+      allow write: if signedIn();
+    }
+
+    // Community vote tallies (live pulse + predictions). Any signed-in user
+    // may read and increment the counters.
+    match /polls/{pollId} {
+      allow read: if signedIn();
+      allow write: if signedIn();
+    }
+
+    // Per-team fan club members; a user may only write their own member doc.
+    match /fanClubMembers/{teamId}/members/{uid} {
+      allow read: if signedIn();
+      allow write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Battle leaderboard; a user owns their own entry.
+    match /battleLeaderboard/{uid} {
+      allow read: if signedIn();
+      allow write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Private user document + any subcollections (predictions, etc.).
+    match /users/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+      match /{document=**} {
+        allow read, write: if signedIn() && request.auth.uid == uid;
+      }
+    }
+  }
+}

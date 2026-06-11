@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Force | Format-Table Name, Length -AutoSize; \"---\"; \"Item count:\"; \\(Get-ChildItem -Force\\).Count)",
+      "PowerShell(flutter pub get 2>&1)",
+      "PowerShell(Get-ChildItem \"D:\\\\duoling_for_football\\\\assets\\\\seed\" | Select-Object Name, @{N='KB';E={[math]::Round\\($_.Length/1KB,1\\)}})"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "397234373339",
+    "project_id": "roadtowc2026",
+    "storage_bucket": "roadtowc2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397234373339:android:7d4a4ac72620abea1302fe",
+        "android_client_info": {
+          "package_name": "com.moveforwardeducation.wcfootball"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACbQbe-uH4EIFQ3FR2u7BhrzR9PydAADI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397234373339:android:ccfe41b098ad16c21302fe",
+        "android_client_info": {
+          "package_name": "com.roadtowc2026.road_to_wc2026"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACbQbe-uH4EIFQ3FR2u7BhrzR9PydAADI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,18 @@
+[
+  { "id": "s_metlife", "name": "MetLife Stadium", "city": "East Rutherford, NJ", "country": "USA", "capacity": 82500, "yearBuilt": 2010, "nickname": "The Meadowlands" },
+  { "id": "s_sofi", "name": "SoFi Stadium", "city": "Inglewood, CA", "country": "USA", "capacity": 70000, "yearBuilt": 2020, "nickname": "The Spaceship" },
+  { "id": "s_atttx", "name": "AT&T Stadium", "city": "Arlington, TX", "country": "USA", "capacity": 80000, "yearBuilt": 2009, "nickname": "Jerry World" },
+  { "id": "s_arrowhead", "name": "Arrowhead Stadium", "city": "Kansas City, MO", "country": "USA", "capacity": 76416, "yearBuilt": 1972, "nickname": "The Sea of Red" },
+  { "id": "s_mercedes", "name": "Mercedes-Benz Stadium", "city": "Atlanta, GA", "country": "USA", "capacity": 71000, "yearBuilt": 2017, "nickname": "The Benz" },
+  { "id": "s_hardrock", "name": "Hard Rock Stadium", "city": "Miami Gardens, FL", "country": "USA", "capacity": 65326, "yearBuilt": 1987, "nickname": "Hard Rock" },
+  { "id": "s_lincoln", "name": "Lincoln Financial Field", "city": "Philadelphia, PA", "country": "USA", "capacity": 69596, "yearBuilt": 2003, "nickname": "The Linc" },
+  { "id": "s_levi", "name": "Levi's Stadium", "city": "Santa Clara, CA", "country": "USA", "capacity": 68500, "yearBuilt": 2014, "nickname": "Levi's" },
+  { "id": "s_seattle", "name": "Lumen Field", "city": "Seattle, WA", "country": "USA", "capacity": 68740, "yearBuilt": 2002, "nickname": "The Clink" },
+  { "id": "s_gillette", "name": "Gillette Stadium", "city": "Foxborough, MA", "country": "USA", "capacity": 65878, "yearBuilt": 2002, "nickname": "Gillette" },
+  { "id": "s_azteca", "name": "Estadio Azteca", "city": "Mexico City", "country": "Mexico", "capacity": 87000, "yearBuilt": 1966, "nickname": "El Coloso de Santa Úrsula" },
+  { "id": "s_akron", "name": "Estadio Akron", "city": "Guadalajara", "country": "Mexico", "capacity": 49850, "yearBuilt": 2010, "nickname": "Estadio Chivas" },
+  { "id": "s_bbva", "name": "Estadio BBVA", "city": "Monterrey", "country": "Mexico", "capacity": 53500, "yearBuilt": 2015, "nickname": "El Gigante de Acero" },
+  { "id": "s_bmo", "name": "BMO Field", "city": "Toronto", "country": "Canada", "capacity": 45500, "yearBuilt": 2007, "nickname": "BMO" },
+  { "id": "s_bcplace", "name": "BC Place", "city": "Vancouver", "country": "Canada", "capacity": 54500, "yearBuilt": 1983, "nickname": "BC Place" },
+  { "id": "s_maracana", "name": "Maracanã", "city": "Rio de Janeiro", "country": "Brazil", "capacity": 78838, "yearBuilt": 1950, "nickname": "Maraca" }
+]

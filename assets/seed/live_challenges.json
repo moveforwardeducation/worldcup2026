@@ -1,0 +1,12 @@
+[
+  { "id": "lc_bra_srb_1", "matchId": "bra_srb", "matchLabel": "Brazil vs Serbia", "minute": "45:20", "teamId": "bra", "question": "Can Brazil score the next goal?", "answerYes": true, "xp": 20, "startsInMinutes": -45, "durationMinutes": 95 },
+  { "id": "lc_bra_srb_2", "matchId": "bra_srb", "matchLabel": "Brazil vs Serbia", "minute": "58:10", "teamId": "bra", "question": "Will Brazil keep a clean sheet?", "answerYes": true, "xp": 20, "startsInMinutes": -45, "durationMinutes": 95 },
+  { "id": "lc_bra_srb_3", "matchId": "bra_srb", "matchLabel": "Brazil vs Serbia", "minute": "72:30", "teamId": "bra", "question": "Will there be a goal in the next 10 minutes?", "answerYes": false, "xp": 25, "startsInMinutes": -45, "durationMinutes": 95 },
+
+  { "id": "lc_arg_mex_1", "matchId": "arg_mex", "matchLabel": "Argentina vs Mexico", "minute": "30:05", "teamId": "arg", "question": "Will Argentina lead at half time?", "answerYes": true, "xp": 20, "startsInMinutes": -30, "durationMinutes": 95 },
+  { "id": "lc_arg_mex_2", "matchId": "arg_mex", "matchLabel": "Argentina vs Mexico", "minute": "55:40", "teamId": "arg", "question": "Will Messi get an assist?", "answerYes": false, "xp": 25, "startsInMinutes": -30, "durationMinutes": 95 },
+
+  { "id": "lc_fra_den_1", "matchId": "fra_den", "matchLabel": "France vs Denmark", "minute": "00:00", "teamId": "fra", "question": "Will Mbappé score in the first half?", "answerYes": true, "xp": 20, "startsInMinutes": 180, "durationMinutes": 95 },
+
+  { "id": "lc_eng_usa_1", "matchId": "eng_usa", "matchLabel": "England vs USA", "minute": "FT", "teamId": "eng", "question": "Will this match end in a draw?", "answerYes": false, "xp": 25, "startsInMinutes": -200, "durationMinutes": 95 }
+]
