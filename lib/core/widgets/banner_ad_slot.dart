@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../constants/ad_units.dart';
 import '../services/ads_service.dart';
+import '../services/remote_config_service.dart';
 
 /// A self-contained adaptive banner ad. Renders nothing until/unless an ad
 /// loads, so it never leaves an empty gap when ads are unavailable.
@@ -24,7 +25,7 @@ class _BannerAdSlotState extends State<BannerAdSlot> {
   }
 
   void _load() {
-    if (!adsReady) return;
+    if (!adsReady || !adsEnabled) return;
     final ad = BannerAd(
       adUnitId: AdUnits.banner,
       size: AdSize.banner,

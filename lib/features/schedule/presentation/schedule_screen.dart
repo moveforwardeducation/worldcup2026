@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/constants/country_flags.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/banner_header.dart';
 import '../../../core/widgets/glow_background.dart';
@@ -171,6 +173,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
           status: _status(f, anchor, now),
           kickoffMs: ko,
           mine: followed.contains(f.teamA) || followed.contains(f.teamB),
+          predStatus: fixtureStatus(f, anchor, now),
         ),
       ));
     }
@@ -190,13 +193,14 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   }
 }
 
-class _MatchRow extends StatelessWidget {
+class _MatchRow extends ConsumerWidget {
   const _MatchRow({
     required this.fixture,
     required this.teamMap,
     required this.status,
     required this.kickoffMs,
     required this.mine,
+    required this.predStatus,
   });
 
   final Fixture fixture;
@@ -204,9 +208,10 @@ class _MatchRow extends StatelessWidget {
   final _SchedStatus status;
   final int kickoffMs;
   final bool mine;
+  final PredStatus predStatus;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final a = teamMap[fixture.teamA];
     final b = teamMap[fixture.teamB];
     final finished = status == _SchedStatus.finished;
@@ -234,10 +239,10 @@ class _MatchRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(a?.flagEmoji ?? '🏳️',
+                    Text(a?.flagEmoji ?? flagForId(fixture.teamA),
                         style: const TextStyle(fontSize: 18)),
                     const SizedBox(width: 6),
-                    Text(a?.code ?? fixture.teamA,
+                    Text(a?.code ?? codeForId(fixture.teamA),
                         style: const TextStyle(
                             color: AppColors.textPrimary,
                             fontWeight: FontWeight.w800,
@@ -253,13 +258,13 @@ class _MatchRow extends StatelessWidget {
                           fontSize: 13),
                     ),
                     const SizedBox(width: 8),
-                    Text(b?.code ?? fixture.teamB,
+                    Text(b?.code ?? codeForId(fixture.teamB),
                         style: const TextStyle(
                             color: AppColors.textPrimary,
                             fontWeight: FontWeight.w800,
                             fontSize: 14)),
                     const SizedBox(width: 6),
-                    Text(b?.flagEmoji ?? '🏳️',
+                    Text(b?.flagEmoji ?? flagForId(fixture.teamB),
                         style: const TextStyle(fontSize: 18)),
                   ],
                 ),
@@ -271,10 +276,44 @@ class _MatchRow extends StatelessWidget {
             ),
           ),
           if (mine)
-            const Icon(Icons.star_rounded, color: AppColors.gold, size: 16),
+            const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child:
+                  Icon(Icons.star_rounded, color: AppColors.gold, size: 16),
+            ),
+          _predictAction(context, ref),
         ],
       ),
     );
+  }
+
+  Widget _predictAction(BuildContext context, WidgetRef ref) {
+    // Live: jump to Live tab. Open (kickoff <24h): jump to Next tab.
+    // Locked/resolved/hidden: no button.
+    final isLive = status == _SchedStatus.live;
+    if (isLive) {
+      return _PredictPill(
+        label: 'Vote Live',
+        icon: Icons.podcasts_rounded,
+        color: AppColors.info,
+        onTap: () {
+          ref.read(pendingPredictTabProvider.notifier).state = 0;
+          context.go('/predict');
+        },
+      );
+    }
+    if (predStatus == PredStatus.open) {
+      return _PredictPill(
+        label: 'Predict',
+        icon: Icons.online_prediction_rounded,
+        color: AppColors.primaryGreen,
+        onTap: () {
+          ref.read(pendingPredictTabProvider.notifier).state = 1;
+          context.go('/predict');
+        },
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _statusLeading() {
@@ -311,6 +350,56 @@ class _MatchRow extends StatelessWidget {
               fontSize: 13),
         );
     }
+  }
+}
+
+class _PredictPill extends StatelessWidget {
+  const _PredictPill({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: color.withValues(alpha: 0.55)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color, size: 14),
+                const SizedBox(width: 5),
+                Text(label,
+                    style: TextStyle(
+                        color: color,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

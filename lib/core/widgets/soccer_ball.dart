@@ -14,12 +14,14 @@ class SoccerBall extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(painter: _SoccerBallPainter()),
+      child: CustomPaint(painter: SoccerBallPainter()),
     );
   }
 }
 
-class _SoccerBallPainter extends CustomPainter {
+/// Public so it can be reused to paint the ball onto an offscreen canvas
+/// (e.g. the generated share banner), not just inside a [CustomPaint].
+class SoccerBallPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final r = size.width / 2;

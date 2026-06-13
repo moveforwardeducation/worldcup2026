@@ -105,7 +105,7 @@ class MatchPredictionCard extends ConsumerWidget {
       children: [
         Text(flag, style: const TextStyle(fontSize: 46)),
         const SizedBox(height: 6),
-        Text(name,
+        Text(name.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -140,7 +140,7 @@ class MatchPredictionCard extends ConsumerWidget {
     }
 
     // Otherwise show the vote split.
-    final labels = [nameA, 'Draw', nameB];
+    final labels = [nameA.toUpperCase(), 'Draw', nameB.toUpperCase()];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -109,12 +109,18 @@ class AppHelp {
   static final collection = HelpTopic(
     title: 'Collection',
     icon: Icons.style_rounded,
-    intro: 'Collect cards of teams, players and stadiums.',
+    intro:
+        'Cards are collectibles — teams, players and stadiums you unlock as you play.',
     points: const [
-      'Cards have four rarities: Common, Rare, Epic, Legendary.',
-      'Unlock cards by opening mystery packs.',
-      'Tap any card to see full stats and facts.',
-      'Filter by Teams, Players or Stadiums.',
+      'Three kinds: Teams, Players, Stadiums.',
+      'Tap a card to flip it and see stats, history and a fun fact.',
+      'How to earn cards: open Mystery Packs. You get a pack every time you level up.',
+      'Four rarity tiers — Common, Rare, Epic, Legendary. The higher the rarity, the harder it is to pull from a pack.',
+      'Teams: 3+ World Cup titles → Legendary (Brazil, Germany, Italy, Argentina). 1–2 titles → Epic (France, Spain, England, Uruguay). Top-10 ranked → Rare. The rest → Common.',
+      'Players: 90+ overall → Legendary, 87+ → Epic, 84+ → Rare, else Common.',
+      'Brazil vs Argentina? Both are Legendary, but each card has its own kit, FIFA rank, top scorer, captain, coach and fun fact — flip to compare.',
+      'Use the chips on top to filter by Teams, Players or Stadiums.',
+      'Greyed-out cards = still locked. They show you what to hunt for.',
     ],
     preview: _CardPreview(),
   );

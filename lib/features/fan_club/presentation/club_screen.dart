@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/banner_ad_slot.dart';
 import '../../../core/widgets/banner_header.dart';
 import '../../../core/widgets/glow_background.dart';
 import '../../../core/widgets/help_button.dart';
@@ -60,7 +61,9 @@ class _ClubScreenState extends ConsumerState<ClubScreen> {
                     ),
                     const SizedBox(height: 6),
                     _MyClubCard(data: data),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
+                    const Center(child: BannerAdSlot()),
+                    const SizedBox(height: 20),
                     _Tabs(
                       tab: _tab,
                       onChange: (t) => setState(() => _tab = t),

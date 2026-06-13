@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import '../core/services/ads_service.dart';
+import '../core/services/remote_config_service.dart';
 import '../data/local/hive/hive_boxes.dart';
 import '../firebase_options.dart';
 
@@ -42,6 +43,9 @@ Future<void> bootstrap() async {
     };
     await FirebaseCrashlytics.instance
         .setCrashlyticsCollectionEnabled(!kDebugMode);
+
+    // Best-effort Remote Config fetch — drives the ads kill-switch.
+    await initRemoteConfig();
   } catch (e) {
     firebaseReady = false;
     if (kDebugMode) {

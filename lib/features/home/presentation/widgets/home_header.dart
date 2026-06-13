@@ -61,18 +61,6 @@ class HomeHeader extends ConsumerWidget {
         ),
         const SizedBox(width: 6),
         InkResponse(
-          onTap: () {},
-          child: const Padding(
-            padding: EdgeInsets.all(4),
-            child: Icon(
-              Icons.notifications_none_rounded,
-              color: AppColors.textPrimary,
-              size: 24,
-            ),
-          ),
-        ),
-        const SizedBox(width: 2),
-        InkResponse(
           onTap: () => context.push('/settings'),
           child: const Padding(
             padding: EdgeInsets.all(4),

@@ -9,6 +9,7 @@ import 'widgets/daily_goal_card.dart';
 import 'widgets/fan_club_card.dart';
 import 'widgets/hero_banner.dart';
 import 'widgets/home_header.dart';
+import 'widgets/recent_results_card.dart';
 import 'widgets/streak_card.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -31,6 +32,10 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 20),
               const _ScheduleQuickLink(),
               const SizedBox(height: 16),
+              const RecentResultsCard(),
+              const SizedBox(height: 20),
+              const Center(child: BannerAdSlot()),
+              const SizedBox(height: 20),
               const StreakCard(),
               const SizedBox(height: 16),
               const FanClubCard(),
@@ -53,8 +58,6 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Center(child: BannerAdSlot()),
             ],
           ),
         ),

@@ -53,13 +53,13 @@ class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF3B1220), Color(0xFF1A1330)],
+          colors: [Color(0xFF1A2A55), Color(0xFF0F1E48)],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.danger.withValues(alpha: 0.5)),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.danger.withValues(alpha: 0.18),
+            color: AppColors.info.withValues(alpha: 0.18),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -74,7 +74,7 @@ class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.danger,
+                  color: AppColors.info,
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: const Row(
@@ -91,12 +91,16 @@ class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
                 ),
               ),
               const SizedBox(width: 10),
-              Text(c.matchLabel,
-                  style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14)),
-              const Spacer(),
+              Expanded(
+                child: Text(c.matchLabel.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14)),
+              ),
+              const SizedBox(width: 8),
               Text(c.minute,
                   style: const TextStyle(
                       color: AppColors.textSecondary,

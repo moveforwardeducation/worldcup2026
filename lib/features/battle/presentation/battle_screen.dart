@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/avatar_chip.dart';
+import '../../../core/widgets/banner_ad_slot.dart';
 import '../../../core/widgets/banner_header.dart';
 import '../../../core/widgets/glow_background.dart';
 import '../../../core/widgets/help_button.dart';
@@ -66,6 +67,8 @@ class BattleScreen extends ConsumerWidget {
                       context.push('/battle/match', extra: opp);
                     },
                   ),
+                  const SizedBox(height: 22),
+                  const Center(child: BannerAdSlot()),
                   const SizedBox(height: 22),
                   const Text('Battle Leaderboard',
                       style: TextStyle(

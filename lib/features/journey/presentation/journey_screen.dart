@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/banner_ad_slot.dart';
 import '../../../core/widgets/glow_background.dart';
 import '../../../core/widgets/help_button.dart';
 import '../../../core/widgets/progress_bar.dart';
@@ -42,9 +43,16 @@ class JourneyScreen extends ConsumerWidget {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
                 sliver: SliverList.separated(
-                  itemCount: stages.length,
+                  itemCount: stages.length + 1,
                   itemBuilder: (context, i) {
-                    final stage = stages[i];
+                    const adAfter = 3; // show banner after stage index 2
+                    if (i == adAfter) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Center(child: BannerAdSlot()),
+                      );
+                    }
+                    final stage = stages[i < adAfter ? i : i - 1];
                     return StageTile(
                       stage: stage,
                       onTap: () => context.push('/stage/${stage.index}'),

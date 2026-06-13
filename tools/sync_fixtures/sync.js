@@ -32,16 +32,47 @@ const db = admin.firestore();
 
 // Map the API's full team names to the app's team ids (so flags/jerseys work).
 // Unmapped teams still sync (display-only); add new ones here as needed.
+// Football-Data.org full team names → 3-letter FIFA codes.
+// All 48 likely 2026 World Cup nations, plus common qualifying nations.
 const NAME_TO_ID = {
-  Argentina: 'arg', Brazil: 'bra', France: 'fra', Germany: 'ger',
-  Spain: 'esp', England: 'eng', Portugal: 'por', Netherlands: 'ned',
-  Italy: 'ita', Uruguay: 'uru', Belgium: 'bel', Colombia: 'col',
+  // CONMEBOL
+  Argentina: 'arg', Brazil: 'bra', Uruguay: 'uru', Colombia: 'col',
+  Ecuador: 'ecu', Peru: 'per', Chile: 'chi', Paraguay: 'par',
+  Bolivia: 'bol', Venezuela: 'ven',
+  // CONCACAF
   'United States': 'usa', USA: 'usa', Mexico: 'mex', Canada: 'can',
-  Japan: 'jpn', Switzerland: 'sui', Denmark: 'den', Poland: 'pol',
+  'Costa Rica': 'crc', 'El Salvador': 'slv', Guatemala: 'gua',
+  Honduras: 'hon', Jamaica: 'jam', Panama: 'pan', Haiti: 'hai',
+  'Trinidad and Tobago': 'tri', 'Curaçao': 'cuw', Curacao: 'cuw',
+  // UEFA
+  France: 'fra', Germany: 'ger', Spain: 'esp', England: 'eng',
+  Portugal: 'por', Netherlands: 'ned', Italy: 'ita', Belgium: 'bel',
+  Switzerland: 'sui', Denmark: 'den', Poland: 'pol', Croatia: 'cro',
+  Serbia: 'srb', Austria: 'aut', Sweden: 'swe', Norway: 'nor',
+  Hungary: 'hun', Czechia: 'cze', 'Czech Republic': 'cze',
+  Romania: 'rou', Slovakia: 'svk', Slovenia: 'svn', Greece: 'gre',
+  Turkey: 'tur', 'Türkiye': 'tur', Ukraine: 'ukr', Albania: 'alb',
+  Wales: 'wal', Scotland: 'sco', 'Republic of Ireland': 'irl',
+  Finland: 'fin', Iceland: 'isl', 'North Macedonia': 'mkd',
+  'Bosnia and Herzegovina': 'bih', 'Bosnia-Herzegovina': 'bih',
+  // CAF
   Morocco: 'mar', Senegal: 'sen', Nigeria: 'nga', Ghana: 'gha',
-  'South Korea': 'kor', 'Korea Republic': 'kor', Australia: 'aus',
-  Iran: 'irn', 'Saudi Arabia': 'ksa', Ecuador: 'ecu', Peru: 'per',
-  Chile: 'chi', Serbia: 'srb', 'Costa Rica': 'crc', Croatia: 'cro',
+  'South Africa': 'rsa', Algeria: 'alg', Tunisia: 'tun', Egypt: 'egy',
+  Cameroon: 'cmr', 'Ivory Coast': 'civ', "Côte d'Ivoire": 'civ',
+  Mali: 'mli', 'Cape Verde': 'cpv', 'Cape Verde Islands': 'cpv',
+  'DR Congo': 'cod', 'Congo DR': 'cod',
+  'Democratic Republic of the Congo': 'cod', Angola: 'ang',
+  'Burkina Faso': 'bfa', Zambia: 'zam',
+  // AFC
+  'South Korea': 'kor', 'Korea Republic': 'kor', Japan: 'jpn',
+  Australia: 'aus', Iran: 'irn', 'IR Iran': 'irn',
+  'Saudi Arabia': 'ksa', Qatar: 'qat', 'United Arab Emirates': 'uae',
+  Iraq: 'irq', Jordan: 'jor', Uzbekistan: 'uzb', China: 'chn',
+  'China PR': 'chn', 'North Korea': 'prk', 'Korea DPR': 'prk',
+  Oman: 'oma', Lebanon: 'lbn', Vietnam: 'vie', Indonesia: 'idn',
+  Thailand: 'tha',
+  // OFC
+  'New Zealand': 'nzl',
 };
 
 function teamId(name) {
@@ -80,13 +111,18 @@ async function main() {
     const away = m.awayTeam && m.awayTeam.name;
     const stage = (m.stage || '').replace(/_/g, ' ');
     const md = m.matchday ? ` · MD${m.matchday}` : '';
+    // Group like "GROUP_A" → "Group A" for a friendlier label; null for KO.
+    const grp = m.group || null;
+    const grpLabel = grp ? grp.replace(/_/g, ' ').replace(/group/i, 'Group') : '';
+    const stageLabel = grpLabel || stage;
     const ft = (m.score && m.score.fullTime) || {};
     const doc = {
       teamA: teamId(home),
       teamB: teamId(away),
       teamAName: home || '',
       teamBName: away || '',
-      dateLabel: `${stage}${md}`.trim(),
+      dateLabel: `${stageLabel}${md}`.trim(),
+      group: grp,
       kickoffMs: m.utcDate ? Date.parse(m.utcDate) : null,
       status: mapStatus(m.status),
       scoreA: ft.home != null ? ft.home : 0,

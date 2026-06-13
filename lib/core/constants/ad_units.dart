@@ -13,10 +13,10 @@ class AdUnits {
   static const _testInterstitial = 'ca-app-pub-3940256099942544/1033173712';
   static const _testRewarded = 'ca-app-pub-3940256099942544/5224354917';
 
-  // Swap these to your real release ids when ready.
-  static const _releaseBanner = _testBanner;
-  static const _releaseInterstitial = _testInterstitial;
-  static const _releaseRewarded = _testRewarded;
+  // Real AdMob release unit ids (publisher ca-app-pub-7521912007386478).
+  static const _releaseBanner = 'ca-app-pub-7521912007386478/6481981359';
+  static const _releaseInterstitial = 'ca-app-pub-7521912007386478/1980463719';
+  static const _releaseRewarded = 'ca-app-pub-7521912007386478/5728137032';
 
   static String get banner => kReleaseMode ? _releaseBanner : _testBanner;
   static String get interstitial =>
@@ -25,4 +25,7 @@ class AdUnits {
 
   /// Show an interstitial after every N lessons.
   static const int interstitialEveryLessons = 3;
+
+  /// Show an interstitial after every N graded predictions.
+  static const int interstitialEveryPredictions = 3;
 }

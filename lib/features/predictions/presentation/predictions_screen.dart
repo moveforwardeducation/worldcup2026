@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/country_flags.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/banner_ad_slot.dart';
 import '../../../core/widgets/banner_header.dart';
 import '../../../core/widgets/glow_background.dart';
 import '../../../core/widgets/help_button.dart';
@@ -36,8 +38,18 @@ class _PredictionsScreenState extends ConsumerState<PredictionsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _tick());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _consumePendingTab();
+      _tick();
+    });
     _timer = Timer.periodic(const Duration(seconds: 15), (_) => _tick());
+  }
+
+  void _consumePendingTab() {
+    final pending = ref.read(pendingPredictTabProvider);
+    if (pending == null) return;
+    setState(() => _tab = pending);
+    ref.read(pendingPredictTabProvider.notifier).state = null;
   }
 
   void _tick() {
@@ -67,9 +79,16 @@ class _PredictionsScreenState extends ConsumerState<PredictionsScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(predictionRefreshProvider);
+    // Consume any pending tab request made via [pendingPredictTabProvider]
+    // (e.g. from the Schedule screen) on every rebuild after the first.
+    ref.listen<int?>(pendingPredictTabProvider, (_, next) {
+      if (next == null) return;
+      setState(() => _tab = next);
+      ref.read(pendingPredictTabProvider.notifier).state = null;
+    });
     final fixturesAsync = ref.watch(fixturesProvider);
-    final groupsAsync = ref.watch(groupsProvider);
-    final loading = fixturesAsync.isLoading || groupsAsync.isLoading;
+    final groups = ref.watch(groupsProvider);
+    final loading = fixturesAsync.isLoading;
 
     return Scaffold(
       backgroundColor: AppColors.bgDeep,
@@ -119,9 +138,13 @@ class _PredictionsScreenState extends ConsumerState<PredictionsScreen> {
                             padding: const EdgeInsets.fromLTRB(20, 4, 20, 28),
                             children: _tabContent(
                               fixturesAsync.valueOrNull ?? const [],
-                              groupsAsync.valueOrNull ?? const [],
+                              groups,
                             ),
                           ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
+                          child: Center(child: BannerAdSlot()),
                         ),
                       ],
                     ),
@@ -179,10 +202,10 @@ class _PredictionsScreenState extends ConsumerState<PredictionsScreen> {
         pollId: f.id,
         dateLabel: f.dateLabel,
         statusLine: line,
-        flagA: teamMap[f.teamA]?.flagEmoji ?? '🏳️',
-        nameA: teamMap[f.teamA]?.name ?? f.teamA,
-        flagB: teamMap[f.teamB]?.flagEmoji ?? '🏳️',
-        nameB: teamMap[f.teamB]?.name ?? f.teamB,
+        flagA: teamMap[f.teamA]?.flagEmoji ?? flagForId(f.teamA),
+        nameA: teamMap[f.teamA]?.name ?? nameForId(f.teamA),
+        flagB: teamMap[f.teamB]?.flagEmoji ?? flagForId(f.teamB),
+        nameB: teamMap[f.teamB]?.name ?? nameForId(f.teamB),
         scoreA: f.scoreA,
         scoreB: f.scoreB,
         status: status,
@@ -236,7 +259,8 @@ class _PredictionsScreenState extends ConsumerState<PredictionsScreen> {
     final now = DateTime.now().millisecondsSinceEpoch;
 
     String label(String id) =>
-        '${teamMap[id]?.flagEmoji ?? ''} ${teamMap[id]?.name ?? id}';
+        '${teamMap[id]?.flagEmoji ?? flagForId(id)} '
+        '${teamMap[id]?.name ?? nameForId(id)}';
 
     if (groups.isEmpty) {
       return const [

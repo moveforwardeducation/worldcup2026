@@ -13,12 +13,14 @@ class Trophy extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size * 1.12,
-      child: CustomPaint(painter: _TrophyPainter()),
+      child: CustomPaint(painter: TrophyPainter()),
     );
   }
 }
 
-class _TrophyPainter extends CustomPainter {
+/// Public so it can be reused to paint the trophy onto an offscreen canvas
+/// (e.g. the generated share banner), not just inside a [CustomPaint].
+class TrophyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;

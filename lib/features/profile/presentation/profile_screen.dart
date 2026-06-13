@@ -6,6 +6,7 @@ import '../../../core/services/stats_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/avatar_chip.dart';
+import '../../../core/widgets/banner_ad_slot.dart';
 import '../../../core/widgets/glow_background.dart';
 import '../../../core/widgets/progress_bar.dart';
 import '../../../data/models/achievement.dart';
@@ -75,6 +76,8 @@ class ProfileScreen extends ConsumerWidget {
                       _StatTile(label: 'Cards', value: '$cards'),
                     ],
                   ),
+                  const SizedBox(height: 22),
+                  const Center(child: BannerAdSlot()),
                   const SizedBox(height: 22),
                   _BadgesSection(unlocked: unlockedAch),
                   const SizedBox(height: 22),

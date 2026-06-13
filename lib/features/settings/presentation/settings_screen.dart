@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_links.dart';
+import '../../../core/services/share_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/banner_header.dart';
 import '../../../core/widgets/glow_background.dart';
@@ -38,8 +38,7 @@ class SettingsScreen extends ConsumerWidget {
                     color: AppColors.primaryGreen,
                     title: 'Share App',
                     subtitle: 'Invite your friends',
-                    onTap: () => SharePlus.instance
-                        .share(ShareParams(text: AppLinks.shareMessage)),
+                    onTap: () => ShareService.shareApp(),
                   ),
                   _Tile(
                     icon: Icons.star_rounded,

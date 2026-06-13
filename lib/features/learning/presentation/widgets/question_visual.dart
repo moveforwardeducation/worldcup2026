@@ -7,7 +7,6 @@ import '../../../../data/models/question.dart';
 import '../../../../data/models/team_jersey.dart';
 import '../../../../data/providers.dart';
 import 'player_quiz_card.dart';
-import 'stadium_art.dart';
 import 'team_jersey_view.dart';
 
 /// Renders the artwork for a question based on its type, looking up the
@@ -49,8 +48,7 @@ class QuestionVisual extends ConsumerWidget {
           assists: player.assists,
         );
       case QuestionType.stadium:
-        final seed = (question.subjectId ?? 's').hashCode;
-        return StadiumArt(seed: seed, size: 250);
+        return const _StadiumBadge();
       case QuestionType.history:
         return _HistoryVisual(category: question.historyCategory ?? 'History');
     }
@@ -102,6 +100,53 @@ class _HistoryVisual extends StatelessWidget {
             category.toUpperCase(),
             style: const TextStyle(
               color: AppColors.gold,
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StadiumBadge extends StatelessWidget {
+  const _StadiumBadge();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            gradient: AppColors.heroGradient,
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.primaryGreen, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryGreen.withValues(alpha: 0.3),
+                blurRadius: 24,
+              ),
+            ],
+          ),
+          alignment: Alignment.center,
+          child: const Icon(Icons.stadium_rounded,
+              color: AppColors.primaryGreen, size: 56),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.primaryGreen.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Text(
+            'STADIUM',
+            style: TextStyle(
+              color: AppColors.primaryGreen,
               fontWeight: FontWeight.w800,
               fontSize: 12,
               letterSpacing: 1,

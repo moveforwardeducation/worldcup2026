@@ -42,6 +42,24 @@ Pulse" votes, fan-club leaderboards, and battle mode. **Android-first.**
 
 ---
 
+## Git / GitHub workflow
+- Repo: **https://github.com/moveforwardeducation/worldcup2026** (gh CLI authed as
+  `sanjibd`, https). Git identity: sanjibd / sanjibkr@gmail.com.
+- **Branch policy:** do ALL work + commits on **`develop`**. Only merge
+  `develop → main` when the user calls a **release** (then tag it).
+- `.gitignore` protects secrets: `android/key.properties`, `*.jks`, `node_modules/`,
+  `tools/sync_fixtures/service-account*.json`. **Never commit these.**
+  `google-services.json` + `firebase_options.dart` ARE committed (Firebase client
+  config, not secret, needed to build).
+- Commit message footer: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+- **Pipeline secrets are the user's to add** in GitHub repo Settings → Secrets and
+  variables → Actions: `FOOTBALL_API_KEY`, `FIREBASE_SERVICE_ACCOUNT`.
+- ⚠️ The sync-fixtures **cron only fires from the default branch (`main`)**; the
+  workflow currently lives on `develop`, so scheduled runs start after the first
+  release merge. Manual "Run workflow" works from `develop` now.
+
+---
+
 ## Identity
 - **applicationId / namespace:** `com.moveforwardeducation.wcfootball`
 - **Launcher label:** "Football Champions". MainActivity at

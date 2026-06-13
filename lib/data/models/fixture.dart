@@ -14,6 +14,7 @@ class Fixture {
     required this.kickoffInMinutes,
     this.kickoffMs,
     this.status,
+    this.group,
   });
 
   final String id;
@@ -35,7 +36,24 @@ class Fixture {
   /// 'finished'. Null for bundled demo fixtures (time-window logic is used).
   final String? status;
 
+  /// Group code from the feed, e.g. 'GROUP_A'. Null for knockout matches and
+  /// for bundled fixtures (whose group is parsed from [dateLabel] instead).
+  final String? group;
+
   bool get isFinished => status == 'finished';
+
+  /// The group letter ('A'..'L') this fixture belongs to, or null if it's a
+  /// knockout match. Prefers the explicit [group] field, else parses the
+  /// dateLabel (e.g. 'Group A · MD1').
+  String? get groupLetter {
+    final g = group;
+    if (g != null && g.isNotEmpty) {
+      final m = RegExp(r'([A-L])$').firstMatch(g.toUpperCase());
+      if (m != null) return m.group(1);
+    }
+    final m = RegExp(r'Group ([A-L])', caseSensitive: false).firstMatch(dateLabel);
+    return m?.group(1)?.toUpperCase();
+  }
 
   /// 0 = team A win, 1 = draw, 2 = team B win.
   int get result {
@@ -66,6 +84,7 @@ class Fixture {
         kickoffInMinutes: 0,
         kickoffMs: (d['kickoffMs'] as num?)?.toInt(),
         status: d['status'] as String?,
+        group: d['group'] as String?,
       );
 }
 

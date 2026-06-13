@@ -134,15 +134,46 @@ class QuestionFactory {
     final available = stadiums.where((s) => !used.contains(s.id)).toList();
     final pool = available.isEmpty ? stadiums : available;
     final target = pool[rnd.nextInt(pool.length)];
+
+    // Three text-based templates — no fuzzy stadium artwork.
+    // 0: "Which stadium is in {city}?"  → answer = stadium name
+    // 1: "Which stadium has the nickname '{nickname}'?" → answer = stadium name
+    // 2: "In which city is {stadium name}?" → answer = city
+    // Skip the nickname template if the target has no nickname.
+    final hasNickname = (target.nickname ?? '').isNotEmpty;
+    final tpl = hasNickname ? rnd.nextInt(3) : (rnd.nextInt(2) == 0 ? 0 : 2);
+
+    if (tpl == 2) {
+      // City answer.
+      final distractorPool = stadiums
+          .where((s) => s.id != target.id && s.city != target.city)
+          .map((s) => s.city)
+          .toSet()
+          .toList();
+      final distractors = _pick(pool: distractorPool, count: 3, rnd: rnd);
+      final options = [target.city, ...distractors]..shuffle(rnd);
+      return Question(
+        type: QuestionType.stadium,
+        prompt: 'In which city is ${target.name}?',
+        options: options,
+        correctIndex: options.indexOf(target.city),
+        subjectId: target.id,
+      );
+    }
+
+    // Templates 0 and 1 — both have a stadium-name answer.
     final distractors = _pick(
       pool: stadiums.where((s) => s.id != target.id).toList(),
       count: 3,
       rnd: rnd,
     );
     final options = [target, ...distractors]..shuffle(rnd);
+    final prompt = tpl == 0
+        ? 'Which stadium is in ${target.city}?'
+        : "Which stadium is nicknamed '${target.nickname}'?";
     return Question(
       type: QuestionType.stadium,
-      prompt: 'Which stadium is this?',
+      prompt: prompt,
       options: options.map((s) => s.name).toList(),
       correctIndex: options.indexOf(target),
       subjectId: target.id,
