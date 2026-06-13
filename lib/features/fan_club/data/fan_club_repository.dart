@@ -13,11 +13,17 @@ class FanClubRepository {
 
   final FirebaseFirestore? firestore;
 
+  /// Bump when the baseline formula changes so already-seeded projects
+  /// re-seed `teamLeaderboard` with the new values.
+  static const int _seedVersion = 2;
+
   int _baseXp(Team t) {
+    // A small, stable baseline ranked by strength so the board isn't empty,
+    // yet modest enough that real fan XP visibly moves a team up.
     final ranking = (t.fifaRanking ?? 30).clamp(1, 40);
-    final base = 130000 - ranking * 1500;
-    final variance = t.id.hashCode % 4000;
-    return base + variance.abs();
+    final base = (41 - ranking) * 40; // 40..1600
+    final variance = (t.id.hashCode % 200).abs();
+    return base + variance;
   }
 
   /// Seeds the team leaderboard once, then reads standings, blending the
@@ -114,7 +120,9 @@ class FanClubRepository {
     Map<String, int> base,
   ) async {
     final marker = await fs.collection('teamLeaderboard').doc('_meta').get();
-    if (marker.exists) return;
+    final seededVersion = (marker.data()?['version'] as num?)?.toInt() ??
+        (marker.exists ? 1 : 0);
+    if (seededVersion >= _seedVersion) return;
     final batch = fs.batch();
     for (final t in teams) {
       batch.set(fs.collection('teamLeaderboard').doc(t.id), {
@@ -123,8 +131,11 @@ class FanClubRepository {
         'baseXp': base[t.id],
       });
     }
-    batch.set(fs.collection('teamLeaderboard').doc('_meta'),
-        {'seeded': true, 'ts': FieldValue.serverTimestamp()});
+    batch.set(fs.collection('teamLeaderboard').doc('_meta'), {
+      'seeded': true,
+      'version': _seedVersion,
+      'ts': FieldValue.serverTimestamp(),
+    });
     await batch.commit();
   }
 
@@ -143,15 +154,16 @@ class FanClubRepository {
       list.add(MemberStanding(name: username, xp: userXp, isYou: true));
     }
 
-    // Top up with filler so the board isn't sparse with few real users.
+    // Top up with a little filler so the board isn't sparse with few real
+    // users. Modest XP relative to the user so real club-mates rank naturally.
     const names = ['Lucas', 'Pedro', 'Mateo', 'Rafael', 'Gabriel', 'Bruno'];
-    const factors = [1.7, 1.3, 0.85, 0.7, 0.55, 0.42];
+    const factors = [1.4, 1.1, 0.8, 0.6, 0.45, 0.3];
     final existing = list.map((m) => m.name).toSet();
     for (var i = 0; i < names.length && list.length < 7; i++) {
       if (existing.contains(names[i])) continue;
       list.add(MemberStanding(
         name: names[i],
-        xp: (userXp * factors[i]).round() + 500,
+        xp: (userXp * factors[i]).round() + 40,
         isYou: false,
       ));
     }

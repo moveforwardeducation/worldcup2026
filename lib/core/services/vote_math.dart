@@ -7,9 +7,12 @@ class VoteMath {
   VoteMath._();
 
   static List<int> baseCounts(String pollId, int options) {
+    // A small, stable baseline so the bars never look empty when the app has
+    // few users — yet modest enough (dozens, not thousands) that real
+    // Firestore votes quickly overtake it. Seeded per poll for stability.
     return List.generate(options, (i) {
       final r = math.Random('$pollId#$i'.hashCode);
-      return 180 + r.nextInt(1000);
+      return 20 + r.nextInt(80); // 20–99 per option
     });
   }
 
