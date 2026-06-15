@@ -36,6 +36,8 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 20),
               const Center(child: BannerAdSlot()),
               const SizedBox(height: 20),
+              const _StandingsQuickLink(),
+              const SizedBox(height: 16),
               const StreakCard(),
               const SizedBox(height: 16),
               const FanClubCard(),
@@ -112,6 +114,67 @@ class _ScheduleQuickLink extends StatelessWidget {
                             fontSize: 16)),
                     SizedBox(height: 2),
                     Text('Fixtures, your teams & results',
+                        style: TextStyle(
+                            color: AppColors.textSecondary, fontSize: 12)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary, size: 26),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StandingsQuickLink extends StatelessWidget {
+  const _StandingsQuickLink();
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () => context.push('/standings'),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF14324A), Color(0xFF11233F)],
+            ),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppColors.glassBorder),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  gradient: AppColors.greenCta,
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: const Icon(Icons.format_list_numbered_rounded,
+                    color: Colors.white, size: 24),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Group Standings',
+                        style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16)),
+                    SizedBox(height: 2),
+                    Text('Live group tables & qualification',
                         style: TextStyle(
                             color: AppColors.textSecondary, fontSize: 12)),
                   ],

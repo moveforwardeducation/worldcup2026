@@ -25,7 +25,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 1,
       current: stats.lessonsCompleted,
       rewardXp: 50,
-      rewardCoins: 20,
     ),
     Achievement(
       id: 'team_collector',
@@ -35,7 +34,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 10,
       current: teamCards,
       rewardXp: 100,
-      rewardCoins: 50,
     ),
     Achievement(
       id: 'collector',
@@ -45,7 +43,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 10,
       current: totalCards,
       rewardXp: 100,
-      rewardCoins: 50,
     ),
     Achievement(
       id: 'sharp_shooter',
@@ -55,7 +52,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 100,
       current: stats.totalCorrect,
       rewardXp: 150,
-      rewardCoins: 75,
     ),
     Achievement(
       id: 'predictor',
@@ -65,7 +61,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 20,
       current: stats.predictionsCorrect,
       rewardXp: 200,
-      rewardCoins: 100,
     ),
     Achievement(
       id: 'streak_master',
@@ -75,7 +70,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 14,
       current: streak.best,
       rewardXp: 200,
-      rewardCoins: 100,
     ),
     Achievement(
       id: 'wc_expert',
@@ -85,7 +79,6 @@ final achievementsProvider = Provider<List<Achievement>>((ref) {
       target: 50,
       current: xp.level,
       rewardXp: 500,
-      rewardCoins: 250,
     ),
   ];
 });

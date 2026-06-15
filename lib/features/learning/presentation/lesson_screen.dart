@@ -197,12 +197,9 @@ class _LessonPlayerState extends ConsumerState<_LessonPlayer>
 
     final stars = failed ? 0 : LessonResult.starsFor(_correct, _total);
     final perfectBonus = (!failed && _correct == _total) ? XpRules.xpPerfectLesson : 0;
-    final coins = failed ? 0 : 10 + stars * 5;
 
-    if (perfectBonus > 0 || coins > 0) {
-      final r = ref
-          .read(progressionServiceProvider)
-          .awardXp(perfectBonus, coins: coins);
+    if (perfectBonus > 0) {
+      final r = ref.read(progressionServiceProvider).awardXp(perfectBonus);
       _xpEarned += perfectBonus;
       if (r.leveledUp) {
         _leveledUp = true;
@@ -227,7 +224,6 @@ class _LessonPlayerState extends ConsumerState<_LessonPlayer>
         correct: _correct,
         total: _total,
         xpEarned: _xpEarned,
-        coinsEarned: coins,
         stars: stars,
         leveledUp: _leveledUp,
         newLevel: _newLevel,
@@ -242,7 +238,6 @@ class _LessonPlayerState extends ConsumerState<_LessonPlayer>
         correct: _correct,
         total: _total,
         xpEarned: _xpEarned,
-        coinsEarned: 0,
         stars: 0,
         leveledUp: _leveledUp,
         newLevel: _newLevel,

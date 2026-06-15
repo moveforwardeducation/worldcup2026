@@ -29,6 +29,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _page = 0;
 
   final Set<String> _selected = {};
+  final _nameController = TextEditingController();
   String? _primary;
   int _avatarSeed = 7;
 
@@ -41,6 +42,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   void dispose() {
     _controller.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -59,17 +61,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _finish() async {
     if (_selected.isEmpty) return;
     final primary = _primary ?? _selected.first;
+    final name = _nameController.text.trim();
+    final username = name.isEmpty ? 'Football Fan' : name;
     final existing = ref.read(userProfileProvider);
     // Create a fresh profile (new users), or update an existing one.
     final profile = (existing ??
             UserProfile(
-              username: 'Football Fan',
+              username: username,
               avatarSeed: _avatarSeed,
               favoriteTeamId: primary,
               createdAtMs: DateTime.now().millisecondsSinceEpoch,
               followedTeamIds: _selected.toList(),
             ))
         .copyWith(
+      username: username,
       favoriteTeamId: primary,
       followedTeamIds: _selected.toList(),
       avatarSeed: _avatarSeed,
@@ -231,6 +236,53 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
       children: [
         const SizedBox(height: 4),
+        const Text(
+          'Your name',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w900,
+              fontSize: 24),
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          "What should fans call you? You can change this later.",
+          textAlign: TextAlign.center,
+          style:
+              TextStyle(color: AppColors.textSecondary, fontSize: 13, height: 1.4),
+        ),
+        const SizedBox(height: 14),
+        TextField(
+          controller: _nameController,
+          maxLength: 16,
+          textAlign: TextAlign.center,
+          textCapitalization: TextCapitalization.words,
+          textInputAction: TextInputAction.done,
+          style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w800,
+              fontSize: 16),
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(
+            counterText: '',
+            hintText: 'e.g. Alex',
+            hintStyle: const TextStyle(color: AppColors.textMuted),
+            filled: true,
+            fillColor: Colors.white.withValues(alpha: 0.06),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide:
+                  BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(color: AppColors.primaryGreen),
+            ),
+          ),
+        ),
+        const SizedBox(height: 26),
         const Text(
           'Pick Your Clubs',
           textAlign: TextAlign.center,

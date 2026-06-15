@@ -110,7 +110,7 @@ class _InfoRow extends StatelessWidget {
           SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Each pack contains cards, coins and XP. Level up to earn more!',
+              'Each pack contains cards and XP. Level up to earn more!',
               style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
             ),
           ),

@@ -17,6 +17,14 @@ class LiveChallengeRepository {
       ((_box.get('liveAnswered') as List?)?.cast<String>() ?? const [])
           .toSet();
 
+  /// The user's stored pick per answered moment id (0 = YES, 1 = NO), so it
+  /// can be shown read-only after the moment is locked in.
+  Map<String, int> choices() {
+    final raw = _box.get('liveChoices') as Map?;
+    if (raw == null) return const {};
+    return raw.map((k, v) => MapEntry(k as String, (v as num).toInt()));
+  }
+
   Future<void> markAnswered({
     required String id,
     required bool answeredYes,
@@ -24,6 +32,10 @@ class LiveChallengeRepository {
   }) async {
     final set = answered()..add(id);
     await _box.put('liveAnswered', set.toList());
+
+    final choiceMap = Map<String, int>.from(choices());
+    choiceMap[id] = answeredYes ? 0 : 1; // 0 = YES, 1 = NO
+    await _box.put('liveChoices', choiceMap);
 
     final fs = firestore;
     final u = uid;

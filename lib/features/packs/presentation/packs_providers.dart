@@ -34,7 +34,7 @@ final packsCountProvider = StateNotifierProvider<PacksNotifier, int>((ref) {
 });
 
 /// Opens one pack (if available), applies all side effects (unlock cards,
-/// award coins/XP) and returns the revealed rewards for display.
+/// award XP) and returns the revealed rewards for display.
 Future<List<PackReward>?> openMysteryPack(WidgetRef ref) async {
   final consumed = await ref.read(packsCountProvider.notifier).consumeOne();
   if (!consumed) return null;
@@ -45,13 +45,16 @@ Future<List<PackReward>?> openMysteryPack(WidgetRef ref) async {
   final rnd = math.Random();
 
   final rewards = <PackReward>[];
+  var totalXp = 0;
 
   // Two card slots, preferring cards the user doesn't own yet.
   for (var slot = 0; slot < 2; slot++) {
     final locked = catalog.where((c) => !owned.contains(c.id)).toList();
     if (locked.isEmpty) {
-      // Collection complete — convert to coins.
-      rewards.add(PackReward.coins(100 + rnd.nextInt(100)));
+      // Collection complete — award bonus XP instead of a card.
+      final bonus = 60 + rnd.nextInt(60);
+      totalXp += bonus;
+      rewards.add(PackReward.xp(bonus));
       continue;
     }
     final picked = _weightedPick(locked, rnd);
@@ -60,14 +63,12 @@ Future<List<PackReward>?> openMysteryPack(WidgetRef ref) async {
     rewards.add(PackReward.card(picked, isNew: isNew));
   }
 
-  // Guaranteed coin + XP rewards.
-  final coins = 50 + rnd.nextInt(100);
+  // Guaranteed XP reward.
   final xp = 20 + rnd.nextInt(40);
-  rewards
-    ..add(PackReward.coins(coins))
-    ..add(PackReward.xp(xp));
+  totalXp += xp;
+  rewards.add(PackReward.xp(xp));
 
-  ref.read(progressionServiceProvider).awardXp(xp, coins: coins);
+  ref.read(progressionServiceProvider).awardXp(totalXp);
 
   rewards.shuffle(rnd);
   return rewards;

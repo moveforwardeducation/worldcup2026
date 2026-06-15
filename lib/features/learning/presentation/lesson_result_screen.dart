@@ -97,10 +97,10 @@ class _LessonResultScreenState extends State<LessonResultScreen>
                         const SizedBox(width: 14),
                         Expanded(
                           child: _RewardTile(
-                            icon: Icons.monetization_on_rounded,
-                            color: AppColors.gold,
-                            value: '+${r.coinsEarned}',
-                            label: 'Coins',
+                            icon: Icons.check_circle_rounded,
+                            color: AppColors.info,
+                            value: '${r.correct}/${r.total}',
+                            label: 'Correct',
                           ),
                         ),
                       ],

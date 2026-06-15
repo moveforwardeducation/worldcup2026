@@ -12,41 +12,20 @@ import '../live_challenge_providers.dart';
 
 const int kLiveVoteXp = 5;
 
-/// Live "Fan Pulse": cast a YES/NO vote and instantly see the crowd split.
-/// No grading — it's social sentiment, not a graded prediction.
-class LiveChallengeCard extends ConsumerStatefulWidget {
-  const LiveChallengeCard({super.key, required this.challenge});
+/// Live "Fan Pulse" card for a single in-play match. Lists every Fan-Pulse
+/// moment for the match: unanswered ones show YES/NO buttons; answered ones
+/// lock into a read-only result (your pick + the crowd split). The card stays
+/// visible for as long as the match is live.
+class LiveMatchCard extends ConsumerWidget {
+  const LiveMatchCard({super.key, required this.match});
 
-  final LiveChallenge challenge;
-
-  @override
-  ConsumerState<LiveChallengeCard> createState() => _LiveChallengeCardState();
-}
-
-class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
-  int? _choice; // 0 = YES, 1 = NO
-
-  void _vote(int option) {
-    setState(() => _choice = option);
-    HapticFeedback.lightImpact();
-    ref.read(progressionServiceProvider).awardXp(kLiveVoteXp);
-    ref.read(voteRepositoryProvider).recordVote(
-          pollId: 'live_${widget.challenge.id}',
-          option: option,
-        );
-  }
-
-  Future<void> _dismiss() async {
-    await ref.read(answeredLiveProvider.notifier).mark(
-          id: widget.challenge.id,
-          answeredYes: _choice == 0,
-          correct: false,
-        );
-  }
+  final LiveMatch match;
 
   @override
-  Widget build(BuildContext context) {
-    final c = widget.challenge;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(answeredLiveProvider);
+    final allAnswered = match.moments.every((m) => state.isAnswered(m.id));
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -92,7 +71,7 @@ class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(c.matchLabel.toUpperCase(),
+                child: Text(match.matchLabel.toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -101,29 +80,92 @@ class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
                         fontSize: 14)),
               ),
               const SizedBox(width: 8),
-              Text(c.minute,
+              Text(match.moments.first.minute,
                   style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontWeight: FontWeight.w700,
                       fontSize: 13)),
             ],
           ),
-          const SizedBox(height: 14),
-          Text(
-            c.question,
-            style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w800,
-                fontSize: 17),
-          ),
-          const SizedBox(height: 14),
-          _choice == null ? _voteButtons() : _result(),
+          for (var i = 0; i < match.moments.length; i++) ...[
+            const SizedBox(height: 16),
+            if (i > 0)
+              Divider(color: Colors.white.withValues(alpha: 0.08), height: 1),
+            if (i > 0) const SizedBox(height: 16),
+            _MomentBlock(challenge: match.moments[i]),
+          ],
+          if (allAnswered) ...[
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Icon(Icons.check_circle_rounded,
+                    color: AppColors.primaryGreen, size: 16),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    "You've made all your calls — match still live",
+                    style: TextStyle(
+                        color: AppColors.textSecondary.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
   }
+}
 
-  Widget _voteButtons() {
+/// One Fan-Pulse moment: interactive (YES/NO buttons) until answered, then a
+/// read-only result showing the user's pick and the crowd split.
+class _MomentBlock extends ConsumerWidget {
+  const _MomentBlock({required this.challenge});
+
+  final LiveChallenge challenge;
+
+  void _vote(WidgetRef ref, int option) {
+    HapticFeedback.lightImpact();
+    ref.read(progressionServiceProvider).awardXp(kLiveVoteXp);
+    ref.read(voteRepositoryProvider).recordVote(
+          pollId: 'live_${challenge.id}',
+          option: option,
+        );
+    ref.read(answeredLiveProvider.notifier).mark(
+          id: challenge.id,
+          answeredYes: option == 0,
+          correct: false,
+        );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(answeredLiveProvider);
+    final answered = state.isAnswered(challenge.id);
+    final choice = state.choiceFor(challenge.id);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          challenge.question,
+          style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w800,
+              fontSize: 16),
+        ),
+        const SizedBox(height: 12),
+        if (!answered)
+          _voteButtons(ref)
+        else
+          _result(ref, choice),
+      ],
+    );
+  }
+
+  Widget _voteButtons(WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -135,40 +177,50 @@ class _LiveChallengeCardState extends ConsumerState<LiveChallengeCard> {
         Row(
           children: [
             Expanded(
-                child:
-                    _voteButton('YES', AppColors.primaryGreen, () => _vote(0))),
+                child: _voteButton(
+                    'YES', AppColors.primaryGreen, () => _vote(ref, 0))),
             const SizedBox(width: 12),
             Expanded(
-                child: _voteButton('NO', AppColors.danger, () => _vote(1))),
+                child:
+                    _voteButton('NO', AppColors.danger, () => _vote(ref, 1))),
           ],
         ),
       ],
     );
   }
 
-  Widget _result() {
-    final pollId = 'live_${widget.challenge.id}';
+  Widget _result(WidgetRef ref, int? choice) {
+    final pollId = 'live_${challenge.id}';
     final live = ref.watch(pollCountsProvider(pollId)).valueOrNull ?? const {};
     final counts = VoteMath.blend(
       pollId: pollId,
       options: 2,
       live: live,
-      userChoice: _choice,
+      userChoice: choice,
     );
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         VoteBars(
           labels: const ['Yes', 'No'],
           counts: counts,
-          userChoice: _choice,
+          userChoice: choice,
           optionColors: const [AppColors.primaryGreen, AppColors.danger],
         ),
-        const SizedBox(height: 12),
-        GestureDetector(
-          onTap: _dismiss,
-          child: const Text('Continue →',
-              style: TextStyle(
-                  color: AppColors.gold, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            const Icon(Icons.how_to_vote_rounded,
+                color: AppColors.gold, size: 14),
+            const SizedBox(width: 6),
+            Text(
+              'Your call: ${choice == 1 ? 'NO' : 'YES'}',
+              style: const TextStyle(
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12),
+            ),
+          ],
         ),
       ],
     );

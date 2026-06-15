@@ -21,7 +21,8 @@ class ClubScreen extends ConsumerStatefulWidget {
 }
 
 class _ClubScreenState extends ConsumerState<ClubScreen> {
-  int _tab = 0; // 0 Global, 1 Country, 2 Fan Clubs
+  int _tab = 0; // 0 Clubs, 1 My Club
+  bool _confederationOnly = false; // Clubs filter: All vs My Region
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +69,20 @@ class _ClubScreenState extends ConsumerState<ClubScreen> {
                       tab: _tab,
                       onChange: (t) => setState(() => _tab = t),
                     ),
-                    const SizedBox(height: 14),
-                    if (_tab == 2)
-                      ..._memberRows(data.members)
-                    else
+                    const SizedBox(height: 12),
+                    if (_tab == 0) ...[
+                      const _TabHint(
+                          'Every team has a fan club. Clubs are ranked by '
+                          'their fans’ total XP.'),
+                      const SizedBox(height: 12),
+                      _RegionToggle(
+                        confederationOnly: _confederationOnly,
+                        onChange: (v) =>
+                            setState(() => _confederationOnly = v),
+                      ),
+                      const SizedBox(height: 14),
                       ..._teamRows(
-                        _tab == 0 ? data.global : data.country,
+                        _confederationOnly ? data.country : data.global,
                         data.userTeamId,
                         ref
                                 .watch(userProfileProvider)
@@ -81,6 +90,13 @@ class _ClubScreenState extends ConsumerState<ClubScreen> {
                                 .toSet() ??
                             const {},
                       ),
+                    ] else ...[
+                      const _TabHint(
+                          'Your club-mates — fans who support your team, '
+                          'ranked by their XP.'),
+                      const SizedBox(height: 14),
+                      ..._memberRows(data.members),
+                    ],
                   ],
                 ),
               ),
@@ -203,7 +219,7 @@ class _Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labels = ['Global', 'Country', 'Fan Clubs'];
+    const labels = ['Clubs', 'My Club'];
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -236,6 +252,85 @@ class _Tabs extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// One-line descriptor shown under the tab bar to explain the current view.
+class _TabHint extends StatelessWidget {
+  const _TabHint(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: AppColors.textSecondary,
+        fontSize: 12.5,
+        height: 1.35,
+      ),
+    );
+  }
+}
+
+/// All / My Region filter for the Clubs leaderboard (replaces the old
+/// "Country" tab — it was just a confederation filter of Global).
+class _RegionToggle extends StatelessWidget {
+  const _RegionToggle({
+    required this.confederationOnly,
+    required this.onChange,
+  });
+  final bool confederationOnly;
+  final ValueChanged<bool> onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _pill('All clubs', !confederationOnly, () => onChange(false), null),
+        const SizedBox(width: 8),
+        _pill('My region', confederationOnly, () => onChange(true),
+            Icons.public_rounded),
+      ],
+    );
+  }
+
+  Widget _pill(String label, bool active, VoidCallback onTap, IconData? icon) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: active
+              ? AppColors.primaryGreen.withValues(alpha: 0.18)
+              : Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: active
+                ? AppColors.primaryGreen.withValues(alpha: 0.6)
+                : Colors.white.withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon,
+                  size: 14,
+                  color: active ? AppColors.primaryGreen : AppColors.textMuted),
+              const SizedBox(width: 5),
+            ],
+            Text(label,
+                style: TextStyle(
+                  color:
+                      active ? AppColors.textPrimary : AppColors.textSecondary,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13,
+                )),
+          ],
+        ),
       ),
     );
   }

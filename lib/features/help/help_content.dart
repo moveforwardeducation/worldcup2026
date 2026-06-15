@@ -36,7 +36,7 @@ class AppHelp {
     points: [
       'Your primary club receives all the XP you earn.',
       'Clubs are ranked against each other on the Club tab.',
-      'Climb the global and country leaderboards as you play.',
+      'Filter the board to your region, or see your club-mates in My Club.',
     ],
     preview: _FanClubPreview(),
   );
@@ -96,12 +96,15 @@ class AppHelp {
   static const club = HelpTopic(
     title: 'Fan Clubs',
     icon: Icons.groups_rounded,
-    intro: 'Compete as a team, not just solo.',
+    intro:
+        'Every national team has a fan club. Your XP powers the club you '
+        'support, and clubs compete on the leaderboards.',
     points: [
-      'Global ranks every club by total XP.',
-      'Country filters to your confederation.',
-      'Fan Clubs ranks the members inside your own club.',
-      'You are always highlighted in green.',
+      'Clubs tab: every team\'s fan club, ranked by its fans\' total XP.',
+      'Use the All / My Region toggle to filter Clubs to your confederation.',
+      'My Club tab: the members of your own club, ranked by their XP.',
+      'Earn XP anywhere — lessons, predictions, battles — to climb.',
+      'You and your club are always highlighted in green.',
     ],
     preview: _FanClubPreview(),
   );
@@ -128,10 +131,10 @@ class AppHelp {
   static const packs = HelpTopic(
     title: 'Mystery Packs',
     icon: Icons.card_giftcard_rounded,
-    intro: 'Open packs for cards, coins and XP.',
+    intro: 'Open packs for cards and XP.',
     points: [
       'Earn a pack every time you level up.',
-      'Each pack reveals cards (weighted by rarity) plus coins & XP.',
+      'Each pack reveals cards (weighted by rarity) plus bonus XP.',
       'New cards are added straight to your Collection.',
     ],
     preview: _PackPreview(),
@@ -140,10 +143,10 @@ class AppHelp {
   static const achievements = HelpTopic(
     title: 'Achievements',
     icon: Icons.emoji_events_rounded,
-    intro: 'Long-term goals that reward big XP and coins.',
+    intro: 'Long-term goals that reward big XP.',
     points: [
       'Progress fills automatically as you play.',
-      'Complete one to earn its XP + coin reward.',
+      'Complete one to earn its XP reward.',
       'Unlocked achievements appear as badges on your profile.',
     ],
     preview: _AchievementPreview(),

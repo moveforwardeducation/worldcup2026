@@ -26,8 +26,20 @@ final liveChallengeRepositoryProvider =
   );
 });
 
-class AnsweredLiveNotifier extends StateNotifier<Set<String>> {
-  AnsweredLiveNotifier(this._repo) : super(_repo.answered());
+/// Which live moments the user has answered, and their pick per moment
+/// (0 = YES, 1 = NO) so answered moments can be shown read-only.
+class LiveAnswerState {
+  const LiveAnswerState(this.answered, this.choices);
+  final Set<String> answered;
+  final Map<String, int> choices;
+
+  bool isAnswered(String id) => answered.contains(id);
+  int? choiceFor(String id) => choices[id];
+}
+
+class AnsweredLiveNotifier extends StateNotifier<LiveAnswerState> {
+  AnsweredLiveNotifier(this._repo)
+      : super(LiveAnswerState(_repo.answered(), _repo.choices()));
   final LiveChallengeRepository _repo;
 
   Future<void> mark({
@@ -36,16 +48,17 @@ class AnsweredLiveNotifier extends StateNotifier<Set<String>> {
     required bool correct,
   }) async {
     await _repo.markAnswered(id: id, answeredYes: answeredYes, correct: correct);
-    state = _repo.answered();
+    state = LiveAnswerState(_repo.answered(), _repo.choices());
   }
 }
 
 final answeredLiveProvider =
-    StateNotifierProvider<AnsweredLiveNotifier, Set<String>>((ref) {
+    StateNotifierProvider<AnsweredLiveNotifier, LiveAnswerState>((ref) {
   return AnsweredLiveNotifier(ref.read(liveChallengeRepositoryProvider));
 });
 
-/// A match that is currently in-play, with its remaining (unanswered) moments.
+/// A match that is currently in-play, with all of its Fan-Pulse moments
+/// (answered ones are rendered read-only by the card).
 class LiveMatch {
   const LiveMatch({
     required this.matchId,
@@ -58,8 +71,6 @@ class LiveMatch {
   final String matchLabel;
   final String teamId;
   final List<LiveChallenge> moments;
-
-  LiveChallenge get current => moments.first;
 }
 
 /// Only the matches that are live *right now*, each with its unanswered
@@ -70,11 +81,14 @@ class LiveMatch {
 /// per live match. Falls back to bundled demo only when Firestore returned
 /// no fixtures at all (offline / pipeline not yet run).
 final liveMatchesProvider = Provider<List<LiveMatch>>((ref) {
-  final answered = ref.watch(answeredLiveProvider);
   final fixtures = ref.watch(fixturesProvider).valueOrNull ?? const <Fixture>[];
   final teams = ref.watch(teamsProvider).valueOrNull ?? const <Team>[];
   final teamMap = {for (final t in teams) t.id: t};
   final now = DateTime.now().millisecondsSinceEpoch;
+
+  // A live match stays listed for as long as it's in-play — all of its
+  // moments are kept (answered ones are shown read-only by the card), so the
+  // match doesn't vanish just because you've voted on every moment.
 
   // Real path: any fixture carrying a status field came from Firestore.
   final fromFeed = fixtures.any((f) => f.status != null);
@@ -87,7 +101,7 @@ final liveMatchesProvider = Provider<List<LiveMatch>>((ref) {
         teamMap[f.teamA],
         teamMap[f.teamB],
         now,
-      ).where((m) => !answered.contains(m.id)).toList();
+      );
       if (moments.isEmpty) continue;
       result.add(LiveMatch(
         matchId: f.id,
@@ -104,7 +118,6 @@ final liveMatchesProvider = Provider<List<LiveMatch>>((ref) {
   final byMatch = <String, List<LiveChallenge>>{};
   for (final c in all) {
     if (!c.isLive) continue; // only in-play matches
-    if (answered.contains(c.id)) continue; // skip moments already answered
     byMatch.putIfAbsent(c.matchId, () => []).add(c);
   }
 

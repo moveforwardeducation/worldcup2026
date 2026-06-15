@@ -10,7 +10,6 @@ class Achievement {
     required this.target,
     required this.current,
     required this.rewardXp,
-    required this.rewardCoins,
   });
 
   final String id;
@@ -20,7 +19,6 @@ class Achievement {
   final int target;
   final int current;
   final int rewardXp;
-  final int rewardCoins;
 
   bool get unlocked => current >= target;
   double get progress => target == 0 ? 0 : (current / target).clamp(0, 1);

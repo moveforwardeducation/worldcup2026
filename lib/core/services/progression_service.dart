@@ -9,14 +9,12 @@ import '../constants/xp_rules.dart';
 class AwardResult {
   const AwardResult({
     required this.xpGained,
-    required this.coinsGained,
     required this.leveledUp,
     required this.newLevel,
     required this.dailyGoalReached,
   });
 
   final int xpGained;
-  final int coinsGained;
   final bool leveledUp;
   final int newLevel;
   final bool dailyGoalReached;
@@ -37,7 +35,7 @@ class ProgressionService {
 
   final Ref _ref;
 
-  AwardResult awardXp(int amount, {int coins = 0}) {
+  AwardResult awardXp(int amount) {
     final notifier = _ref.read(xpProvider.notifier);
     final current = _ref.read(xpProvider);
     final today = _todayMs();
@@ -49,7 +47,6 @@ class ProgressionService {
 
     final next = current.copyWith(
       totalXp: current.totalXp + amount,
-      coins: current.coins + coins,
       dailyXpEarned: newDaily,
       dailyGoalDateMs: today,
     );
@@ -60,7 +57,6 @@ class ProgressionService {
 
     return AwardResult(
       xpGained: amount,
-      coinsGained: coins,
       leveledUp: next.level > beforeLevel,
       newLevel: next.level,
       dailyGoalReached: dailyGoalReached,

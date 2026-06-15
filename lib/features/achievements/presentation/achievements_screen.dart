@@ -141,9 +141,6 @@ class _AchievementTile extends StatelessWidget {
                     children: [
                       _reward(Icons.bolt_rounded, AppColors.primaryGreen,
                           '+${achievement.rewardXp} XP'),
-                      const SizedBox(width: 10),
-                      _reward(Icons.monetization_on_rounded, AppColors.gold,
-                          '+${achievement.rewardCoins}'),
                     ],
                   )
                 else

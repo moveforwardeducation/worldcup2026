@@ -49,15 +49,15 @@ class HomeHeader extends ConsumerWidget {
           ),
         ),
         StatPill(
-          icon: Icons.local_fire_department_rounded,
-          value: '${streak.current}',
-          iconColor: AppColors.streakOrange,
+          icon: Icons.bolt_rounded,
+          value: formatNumber(xp.totalXp),
+          iconColor: AppColors.primaryGreen,
         ),
         const SizedBox(width: 8),
         StatPill(
-          icon: Icons.monetization_on_rounded,
-          value: formatNumber(xp.coins),
-          iconColor: AppColors.gold,
+          icon: Icons.local_fire_department_rounded,
+          value: '${streak.current}',
+          iconColor: AppColors.streakOrange,
         ),
         const SizedBox(width: 6),
         InkResponse(

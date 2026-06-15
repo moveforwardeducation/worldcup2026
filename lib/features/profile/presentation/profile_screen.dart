@@ -52,6 +52,7 @@ class ProfileScreen extends ConsumerWidget {
                         into: xp.xpIntoLevel,
                         next: xp.xpForNextLevel,
                         onEditAvatar: () => _editAvatar(context, ref),
+                        onEditName: () => _editName(context, ref),
                       ),
                     ],
                   ),
@@ -161,6 +162,107 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+
+  Future<void> _editName(BuildContext context, WidgetRef ref) async {
+    final profile = ref.read(userProfileProvider);
+    if (profile == null) return;
+    final controller = TextEditingController(text: profile.username);
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        void submit() {
+          final name = controller.text.trim();
+          if (name.isNotEmpty) {
+            ref
+                .read(userProfileProvider.notifier)
+                .save(profile.copyWith(username: name));
+          }
+          Navigator.pop(ctx);
+        }
+
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
+            bottom: 24 + MediaQuery.of(ctx).viewInsets.bottom,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('Edit your name',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18)),
+              const SizedBox(height: 20),
+              TextField(
+                controller: controller,
+                autofocus: true,
+                maxLength: 16,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.done,
+                onSubmitted: (_) => submit(),
+                style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16),
+                decoration: InputDecoration(
+                  counterText: '',
+                  hintText: 'Your name',
+                  hintStyle: const TextStyle(color: AppColors.textMuted),
+                  filled: true,
+                  fillColor: Colors.white.withValues(alpha: 0.06),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 14),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide:
+                        BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: AppColors.primaryGreen),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              SizedBox(
+                height: 50,
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: submit,
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        gradient: AppColors.greenCta,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Text('Save',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _Header extends StatelessWidget {
@@ -171,6 +273,7 @@ class _Header extends StatelessWidget {
     required this.into,
     required this.next,
     required this.onEditAvatar,
+    required this.onEditName,
   });
 
   final String username;
@@ -179,6 +282,7 @@ class _Header extends StatelessWidget {
   final int into;
   final int next;
   final VoidCallback onEditAvatar;
+  final VoidCallback onEditName;
 
   @override
   Widget build(BuildContext context) {
@@ -218,12 +322,27 @@ class _Header extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        Text(
-          username,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w900,
-            fontSize: 22,
+        GestureDetector(
+          onTap: onEditName,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  username,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              const Icon(Icons.edit_rounded,
+                  color: AppColors.textSecondary, size: 16),
+            ],
           ),
         ),
         const SizedBox(height: 4),

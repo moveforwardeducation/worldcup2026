@@ -93,7 +93,7 @@ class FanClubCard extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.monetization_on_rounded,
+                    const Icon(Icons.bolt_rounded,
                         color: AppColors.gold, size: 16),
                     const SizedBox(width: 4),
                     Text(

@@ -27,7 +27,6 @@ class LessonResult {
     required this.correct,
     required this.total,
     required this.xpEarned,
-    required this.coinsEarned,
     required this.stars,
     required this.leveledUp,
     required this.newLevel,
@@ -37,7 +36,6 @@ class LessonResult {
   final int correct;
   final int total;
   final int xpEarned;
-  final int coinsEarned;
   final int stars;
   final bool leveledUp;
   final int newLevel;

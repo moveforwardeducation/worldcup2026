@@ -23,6 +23,7 @@ import '../features/predictions/presentation/predictions_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/schedule/presentation/schedule_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/standings/presentation/standings_screen.dart';
 import 'nav_shell.dart';
 
 final GlobalKey<NavigatorState> _rootKey = GlobalKey(debugLabel: 'root');
@@ -104,6 +105,11 @@ GoRouter buildRouter() {
         path: '/schedule',
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const ScheduleScreen(),
+      ),
+      GoRoute(
+        path: '/standings',
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const StandingsScreen(),
       ),
       GoRoute(
         path: '/settings',

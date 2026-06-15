@@ -215,13 +215,6 @@ class _RewardTile extends StatelessWidget {
               ),
           ],
         );
-      case RewardKind.coins:
-        return _SimpleReward(
-          icon: Icons.monetization_on_rounded,
-          color: AppColors.gold,
-          label: '+${reward.amount}',
-          sub: 'Coins',
-        );
       case RewardKind.xp:
         return _SimpleReward(
           icon: Icons.bolt_rounded,

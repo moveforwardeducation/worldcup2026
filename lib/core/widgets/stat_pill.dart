@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Compact pill used in the top header for streak/coins.
+/// Compact pill used in the top header for XP / streak.
 /// Shows an icon + value with a subtle pill background.
 class StatPill extends StatelessWidget {
   const StatPill({

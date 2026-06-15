@@ -64,6 +64,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                           subtitle: 'Fixtures & results',
                           backdrop: const Confetti(),
                           emblem: const _CalendarEmblem(),
+                          action: _StandingsButton(
+                            onTap: () => context.push('/standings'),
+                          ),
                         ),
                       ),
                       Padding(
@@ -530,6 +533,44 @@ class _Empty extends StatelessWidget {
                     color: AppColors.textSecondary, fontSize: 13)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _StandingsButton extends StatelessWidget {
+  const _StandingsButton({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.format_list_numbered_rounded,
+                  color: AppColors.textSecondary, size: 16),
+              SizedBox(width: 6),
+              Text('Standings',
+                  style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13)),
+            ],
+          ),
+        ),
       ),
     );
   }

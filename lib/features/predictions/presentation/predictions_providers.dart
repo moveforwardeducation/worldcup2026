@@ -13,9 +13,7 @@ import '../data/predictions_repository.dart';
 import '../domain/group_builder.dart';
 
 const int kPredictionXp = 50;
-const int kPredictionCoins = 10;
 const int kGroupXp = 75;
-const int kGroupCoins = 20;
 
 /// Demo: a match's result becomes available this long after kickoff.
 const int kResolveDelayMs = 60 * 1000;
@@ -154,7 +152,7 @@ Future<void> resolveDuePredictions(WidgetRef ref) async {
     if (fixtureStatus(f, anchor, now) != PredStatus.resolved) continue;
     final correct = picks[f.id] == f.result;
     if (correct) {
-      progression.awardXp(kPredictionXp, coins: kPredictionCoins);
+      progression.awardXp(kPredictionXp);
     }
     await stats.recordPrediction(correct: correct);
     await repo.markGraded(f.id);
@@ -167,7 +165,7 @@ Future<void> resolveDuePredictions(WidgetRef ref) async {
     if (groupStatus(g, anchor, now) != PredStatus.resolved) continue;
     final correct = picks[g.id] == g.winnerIndex;
     if (correct) {
-      progression.awardXp(kGroupXp, coins: kGroupCoins);
+      progression.awardXp(kGroupXp);
     }
     await stats.recordPrediction(correct: correct);
     await repo.markGraded(g.id);

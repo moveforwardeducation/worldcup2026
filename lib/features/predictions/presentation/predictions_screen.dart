@@ -269,6 +269,8 @@ class _PredictionsScreenState extends ConsumerState<PredictionsScreen> {
     }
 
     return [
+      _StandingsLink(onTap: () => context.push('/standings')),
+      const SizedBox(height: 14),
       const _SectionLabel('PREDICT THE GROUP WINNERS'),
       const SizedBox(height: 10),
       for (final g in groups) ...[
@@ -370,9 +372,9 @@ class _LiveSection extends ConsumerWidget {
         for (final m in matches)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: LiveChallengeCard(
-              key: ValueKey(m.current.id),
-              challenge: m.current,
+            child: LiveMatchCard(
+              key: ValueKey(m.matchId),
+              match: m,
             ),
           ),
       ],
@@ -407,6 +409,67 @@ class _Empty extends StatelessWidget {
                     height: 1.35)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _StandingsLink extends StatelessWidget {
+  const _StandingsLink({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF1E3A8A), Color(0xFF13235A)],
+            ),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.glassBorder),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  gradient: AppColors.greenCta,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: const Icon(Icons.format_list_numbered_rounded,
+                    color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Group Standings',
+                        style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15)),
+                    Text('See full group tables',
+                        style: TextStyle(
+                            color: AppColors.textSecondary, fontSize: 12)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary, size: 24),
+            ],
+          ),
+        ),
       ),
     );
   }
